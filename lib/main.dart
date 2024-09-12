@@ -22,7 +22,7 @@ List<String> Storelist = [
   "Watch a tv",
   "Shop groceries",
   "Meditate",
-  "Do homework"
+  "Do homework today"
 ];
 
 class to_do extends StatelessWidget {
