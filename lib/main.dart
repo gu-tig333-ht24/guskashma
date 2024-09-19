@@ -61,12 +61,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class To_DO_List extends StatefulWidget {
-  const To_DO_List({super.key});
 
-  @override
-  State<To_DO_List> createState() => _To_DO_ListState();
-}
 
 class _To_DO_ListState extends State<To_DO_List> {
   @override
