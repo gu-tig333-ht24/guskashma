@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './Api.dart';
 import './main.dart';
 
 class AddToList extends StatefulWidget {
@@ -41,9 +42,10 @@ class _MyWidgetState extends State<AddToList> {
               height: 50,
             ),
             ElevatedButton(
-              onPressed: () {
-                final inst = Todo(textEditingController.text, false);
-                provid_2.updateList(inst);
+              onPressed: () async {
+                await addToServer(textEditingController.text);
+                List<Todo> respone = await getFromServer();
+                provid_2.updateList(respone);
                 Navigator.pop(context);
               },
               child: Text("Add"),
