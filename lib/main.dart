@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './Api.dart';
 import './add_to_list.dart';
 
 // 97ac9128-1e0b-41de-9d03-cb269c211441
 class Todo extends ChangeNotifier {
   String uppdrag;
   bool checked;
-  Todo(this.uppdrag, this.checked);
+  String id;
+  Todo(this.uppdrag, this.checked, this.id);
 
   List<Todo> list = [];
   String the_filter = "";
@@ -16,10 +18,10 @@ class Todo extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFromlist(String uppdrag) {
-    list.removeWhere((item) => item.uppdrag == uppdrag);
-    notifyListeners();
-  }
+  // void removeFromlist(String uppdrag) {
+  //   list.removeWhere((item) => item.uppdrag == uppdrag);
+  //   notifyListeners();
+  // }
 
   List<Todo> get getList {
     if (the_filter == "Done") {
@@ -35,14 +37,29 @@ class Todo extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateList(Todo obj) {
-    list.add(obj);
+  void updateList(List<Todo> newlist) {
+    list = newlist;
     notifyListeners();
+  }
+
+  void deleteTodo(String id) async {
+    await deleteFromserver(id);
+    list.removeWhere((item) => item.id == id);
+    notifyListeners();
+  }
+
+  void uppdateTodO(bool check, String id, String title) async {
+    await uppdateServer(check, id, title);
+    notifyListeners();
+  }
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(json['title'], json['done'], json['id']);
   }
 }
 
 void main() {
-  Todo state = Todo("", false);
+  Todo state = Todo("", false, "");
   runApp(ChangeNotifierProvider(
     create: (context) => state,
     child: MyApp(),
@@ -64,6 +81,19 @@ class MyApp extends StatelessWidget {
 
 
 class _To_DO_ListState extends State<To_DO_List> {
+  void initState() {
+    super.initState();
+    _loadTodosFromServer();
+  }
+
+  void _loadTodosFromServer() async {
+    final provid = Provider.of<Todo>(context,
+        listen: false); // Lyssnar inte på ändringar här
+    List<Todo> todosFromServer =
+        await getFromServer(); // Hämtar data från servern
+    provid.updateList(todosFromServer); // Uppdaterar listan i Todo-modellen
+  }
+
   @override
   Widget build(BuildContext context) {
     final provid = Provider.of<Todo>(context);
@@ -97,6 +127,7 @@ class _To_DO_ListState extends State<To_DO_List> {
                       onChanged: (bool? value) {
                         setState(() {
                           provid.getList[index].checked = value!;
+                          provid.uppdateTodO(value, item.id, item.uppdrag);
                         });
                       },
                     ),
@@ -109,7 +140,7 @@ class _To_DO_ListState extends State<To_DO_List> {
                     ),
                     trailing: IconButton(
                         onPressed: () {
-                          provid.removeFromlist(item.uppdrag);
+                          provid.deleteTodo(item.id);
                         },
                         icon: Icon(Icons.cancel)),
                   );
