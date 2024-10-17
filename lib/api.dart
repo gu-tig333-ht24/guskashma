@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'new_class.dart'; 
+import './new_class.dart'; 
 import 'dart:convert';
 
 Future<void> addToServer(String uppdrag) async {
