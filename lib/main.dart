@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'todo_class.dart';
+import 'new_class.dart';
 import './add_to_list.dart';
 import './api.dart';
 
