@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './api.dart';
-import './todo_class.dart';
+import './new_class.dart';
 
 class AddToList extends StatefulWidget {
   const AddToList({super.key});
@@ -56,4 +56,3 @@ class _MyWidgetState extends State<AddToList> {
         ));
   }
 }
-
