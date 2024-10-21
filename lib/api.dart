@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import './new_class.dart'; 
+import './todo_model.dart'; 
 import 'dart:convert';
 
 Future<void> addToServer(String uppdrag) async {
@@ -10,13 +10,13 @@ Future<void> addToServer(String uppdrag) async {
       body: jsonEncode({"title": uppdrag, "done": false}));
 }
 
-Future<List<Todo>> getFromServer() async {
+Future<List<TodoModel>> getFromServer() async {
   final http.Response response = await http.get(Uri.parse(
       "https://todoapp-api.apps.k8s.gu.se/todos?key=59f21635-eb90-491e-8439-5a68c83a72c9"));
   
   if (response.statusCode == 200) {
     List<dynamic> listDeco = jsonDecode(response.body);
-    return listDeco.map((item) => Todo.fromJson(item)).toList(); // Use TodoModel here
+    return listDeco.map((item) => TodoModel.fromJson(item)).toList();
   } else {
     throw Exception('Failed to load todos from server');
   }
